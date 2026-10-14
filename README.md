@@ -2,7 +2,7 @@
 
 In-app инструменты отладки для iOS-приложений на UIKit: перехват сети, производительность, инспектор лейаута и 3D-иерархия вью, хранилища, консоль, краш-репорты.
 
-Это бинарная сборка (XCFramework). Версия: **1.0.0**.
+Это бинарная сборка (XCFramework). Версия: **1.1.0**.
 
 ## Требования
 
@@ -17,7 +17,7 @@ In-app инструменты отладки для iOS-приложений н�
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.0.0")
+    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.1.0")
 ],
 targets: [
     .target(
