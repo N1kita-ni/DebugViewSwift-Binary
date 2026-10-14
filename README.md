@@ -18,6 +18,12 @@ In-app инструменты отладки для iOS-приложений н�
 ```swift
 dependencies: [
     .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.0.0")
+],
+targets: [
+    .target(
+        name: "MyApp",
+        dependencies: [.product(name: "DebugViewSwift", package: "DebugViewSwift-Binary")]
+    )
 ]
 ```
 
