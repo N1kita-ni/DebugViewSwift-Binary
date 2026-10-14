@@ -2,7 +2,7 @@
 
 In-app инструменты отладки для iOS-приложений на UIKit: перехват сети, производительность, инспектор лейаута и 3D-иерархия вью, хранилища, консоль, краш-репорты.
 
-Это бинарная сборка (XCFramework). Текущая версия — **1.2.1**.
+Это бинарная сборка (XCFramework). Текущая версия — **1.2.2**.
 
 ## Содержание
 
@@ -25,6 +25,7 @@ In-app инструменты отладки для iOS-приложений н�
 - Перехват всех HTTP(S)-запросов `URLSession`: `URLSession.shared` и сессии, созданные из `.default` / `.ephemeral` конфигураций. Ответы доходят до приложения без изменений.
 - Список запросов: статус, метод, хост, путь, время, длительность, размер ответа.
 - Поиск по URL или методу и фильтр по статусу: **All / Success / Failed / Redirect / Pending** с количеством запросов.
+- Запросы без ответа сервера показывают код ошибки так же, как HTTP-статус: `-1009 · Offline`, `-1001 · Timed out`, `-1003 · Host not found`, `-999 · Cancelled` и т.д.
 - Детали запроса: заголовки и тело запроса и ответа (JSON форматируется), ошибки.
 - Копирование запроса как cURL, шаринг полного отчёта.
 
@@ -58,7 +59,7 @@ In-app инструменты отладки для iOS-приложений н�
 ## Требования
 
 - iOS 14+
-- Xcode 26.4 или новее — бинарник собран этой версией, более старый Xcode не сможет его импортировать.
+- Xcode 26.4.1 или новее — бинарник собран этой версией, более старый Xcode не сможет его импортировать.
 
 ## Установка
 
@@ -66,14 +67,14 @@ In-app инструменты отладки для iOS-приложений н�
 
 1. **File → Add Package Dependencies…**
 2. Вставьте URL: `https://github.com/N1kita-ni/DebugViewSwift-Binary.git`
-3. **Dependency Rule:** *Up to Next Major Version* от `1.2.1`.
+3. **Dependency Rule:** *Up to Next Major Version* от `1.2.2`.
 4. Добавьте продукт **DebugViewSwift** в таргет приложения.
 
 ### Через Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.2.1")
+    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.2.2")
 ],
 targets: [
     .target(
@@ -226,7 +227,7 @@ rm ~/Library/org.swift.swiftpm/security/fingerprints/debugviewswift-binary-*.jso
 **File → Packages → Reset Package Caches** этот файл не очищает.
 
 **`Failed to build module 'DebugViewSwift'` / `module compiled with Swift … cannot be imported`**
-Xcode старше версии, которой собран бинарник. Обновите Xcode до 26.4 или новее.
+Xcode старше версии, которой собран бинарник. Обновите Xcode до 26.4.1 или новее.
 
 **Шейк не открывает панель**
 - Проверьте, что `enablesShakeGesture` не выключен.
