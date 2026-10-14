@@ -13,8 +13,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "DebugViewSwift",
-            url: "https://github.com/N1kita-ni/DebugViewSwift-Binary/releases/download/1.1.0/DebugViewSwift.xcframework.zip",
-            checksum: "7911e5c3687a6d1b9ce424aad0ec597a325de23d1072d75d722b33de49996cf6"
+            url: "https://github.com/N1kita-ni/DebugViewSwift-Binary/releases/download/1.2.0/DebugViewSwift.xcframework.zip",
+            checksum: "1457f9f13c38e2c022b376620236ab1bf6c5ffaaa5da842e5be30f83b79e74ff"
         )
     ]
 )
