@@ -1,8 +1,8 @@
 # DebugViewSwift
 
-In-app инструменты отладки для iOS-приложений на UIKit: перехват сети, производительность, инспектор лейаута и 3D-иерархия вью, хранилища, консоль, краш-репорты.
+In-app инструменты отладки для iOS-приложений на UIKit: перехват сети, производительность, инспектор лейаута и 3D-иерархия вью, хранилища, консоль, краш-репорты, подмена геолокации и часового пояса, тестовые пуши.
 
-Это бинарная сборка (XCFramework). Текущая версия — **1.2.2**.
+Это бинарная сборка (XCFramework). Текущая версия — **1.3.0**.
 
 ## Содержание
 
@@ -28,10 +28,7 @@ In-app инструменты отладки для iOS-приложений н�
 - Запросы без ответа сервера показывают код ошибки так же, как HTTP-статус: `-1009 · Offline`, `-1001 · Timed out`, `-1003 · Host not found`, `-999 · Cancelled` и т.д.
 - Детали запроса: заголовки и тело запроса и ответа (JSON форматируется), ошибки.
 - Копирование запроса как cURL, шаринг полного отчёта.
-
-### Performance
-- CPU, память и FPS в реальном времени с графиками за последнюю минуту.
-- Компактный виджет с метриками поверх приложения.
+- **Брейкпоинты на ответы**: запрос, подходящий под правило, ставится на паузу, панель открывается с редактором ответа. Можно поменять статус, тело и заголовки, вернуть вместо ответа ошибку (offline, timeout…) или отправить как есть. Если запрос упал без ответа, можно подсунуть свой ответ. Правило — часть URL (`*` — любые символы) и, по желанию, метод; добавляется кнопкой ⏸ в деталях запроса, вручную в **Network → Breakpoints** или из кода. Правила сохраняются между запусками.
 
 ### Interface
 - **3D view hierarchy** — экран раскладывается на слои, как Debug View Hierarchy в Xcode:
@@ -49,12 +46,22 @@ In-app инструменты отладки для iOS-приложений н�
 - UserDefaults, Keychain, Cookies — просмотр, поиск, удаление.
 - Браузер файлов песочницы: просмотр текстовых, JSON и plist-файлов, шаринг, удаление.
 
-### App
-- Информация о приложении и устройстве: версия, модель, система, экран, локаль; UDID на симуляторе и Vendor ID (IDFV).
-- Свои поля (например, окружение или ID пользователя).
-- Консоль: вывод `print`, `NSLog` и stderr.
-- Краш-репорты: неперехваченные исключения и фатальные сигналы, сохраняются между запусками.
-- Свои действия: «Сбросить онбординг», «Разлогинить» и т.п.
+### Tools
+Плитки по две в ряд, каждая открывает свой экран.
+
+- **Performance** — CPU, память и FPS в реальном времени с графиками за минуту; компактный виджет поверх приложения.
+- **Console** — вывод `print`, `NSLog` и stderr.
+- **App & Device** — версия, модель, система, экран, локаль; UDID на симуляторе и Vendor ID (IDFV); свои поля (например, окружение или ID пользователя).
+- **Crash reports** — неперехваченные исключения и фатальные сигналы, сохраняются между запусками.
+- **Custom actions** — свои действия: «Сбросить онбординг», «Разлогинить» и т.п.
+- **Location** — подмена геолокации для `CLLocationManager` (делегат и свойство `location`): пресеты городов или свои координаты. `CLLocationUpdate` / `CLMonitor` (iOS 17+) не подменяются.
+- **Time zone** — подмена часового пояса для `TimeZone.current`, `Calendar.current` и новых `DateFormatter`.
+- **Push notifications** — композер как в Firebase console: заголовок, текст, картинка, звук, бейдж, задержка, data-поля, сохранённые шаблоны. Обычный пуш приходит как локальное уведомление в `UNUserNotificationCenterDelegate` приложения, silent — в `application(_:didReceiveRemoteNotification:fetchCompletionHandler:)`.
+
+Выбранные локация и часовой пояс сохраняются между запусками.
+
+### Scenarios
+Вкладка появляется, если приложение зарегистрировало хотя бы одну группу сценариев. Сценарий — состояние приложения, в которое можно перейти в один тап. Например, тестовые аккаунты (премиум, базовый, вход через почту или Apple ID), чтобы не проходить логин руками. Библиотека не знает, что делает сценарий: это код приложения. Текущий сценарий отмечается галочкой, во время выполнения на плитке крутится спиннер, ошибка показывается в панели, после успеха панель закрывается. Аргумент запуска `-DebugViewSwiftScenario <id>` применяет сценарий сразу при старте.
 
 ## Требования
 
@@ -67,14 +74,14 @@ In-app инструменты отладки для iOS-приложений н�
 
 1. **File → Add Package Dependencies…**
 2. Вставьте URL: `https://github.com/N1kita-ni/DebugViewSwift-Binary.git`
-3. **Dependency Rule:** *Up to Next Major Version* от `1.2.2`.
+3. **Dependency Rule:** *Up to Next Major Version* от `1.3.0`.
 4. Добавьте продукт **DebugViewSwift** в таргет приложения.
 
 ### Через Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.2.2")
+    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.3.0")
 ],
 targets: [
     .target(
@@ -133,6 +140,7 @@ configuration.showsFloatingButton = true
 configuration.enablesShakeGesture = true
 configuration.enablesNetworkLogging = true
 configuration.enablesConsoleCapture = true
+configuration.enablesLocationSimulation = true
 configuration.enablesCrashReporting = false        // если в сборке есть Crashlytics / Sentry
 configuration.ignoredHosts = ["analytics.example.com"]
 configuration.maxNetworkRecords = 300
@@ -147,6 +155,7 @@ DebugViewSwift.setup(configuration)
 | `enablesNetworkLogging` | `true` | Перехватывать запросы `URLSession` |
 | `enablesConsoleCapture` | `true` | Дублировать stdout / stderr во встроенную консоль (консоль Xcode продолжает работать) |
 | `enablesCrashReporting` | `true` | Записывать краши. **Выключите, если в сборке есть другой крэш-репортер** — они конфликтуют за обработчики сигналов |
+| `enablesLocationSimulation` | `true` | Разрешить подмену геолокации в Tools → Location (свизлинг `CLLocationManager`; пока локация не выбрана, вызовы проходят без изменений) |
 | `ignoredHosts` | `[]` | Хосты, запросы к которым не логируются (точное совпадение) |
 | `maxNetworkRecords` | `500` | Сколько последних запросов хранить |
 
@@ -171,7 +180,7 @@ DebugViewSwift.isFloatingButtonHidden     // скрыта ли пользова�
 
 Временное скрытие во время записи экрана не меняет `isFloatingButtonHidden`.
 
-### Свои действия — App → Custom actions
+### Свои действия — Tools → Custom actions
 
 ```swift
 DebugViewSwift.addAction(title: "Reset onboarding") {
@@ -183,7 +192,7 @@ DebugViewSwift.addAction(title: "Logout") {
 }
 ```
 
-### Свои поля — App → App & Device → Custom
+### Свои поля — Tools → App & Device → Custom
 
 ```swift
 DebugViewSwift.setInfo("Staging", forKey: "Environment")
@@ -192,6 +201,54 @@ DebugViewSwift.setInfo(nil, forKey: "User ID")       // удалить поле
 ```
 
 Повторный вызов с тем же ключом заменяет значение; поля идут в порядке первого добавления.
+
+### Брейкпоинты на ответы — Network → Breakpoints
+
+```swift
+#if DEBUG
+DebugViewSwift.addNetworkBreakpoint("api.example.com/profile")
+DebugViewSwift.addNetworkBreakpoint("api.example.com/orders/*", method: "POST")
+#endif
+```
+
+Когда ответ на подходящий запрос получен, приложение его пока не видит: панель открывается на редакторе.
+
+- **Continue** — отправить ответ (с правками или как есть). Поля: статус, тело (JSON форматируется; `Content-Length` пересчитывается) и заголовки (`Name: value` построчно). **Reset** откатывает правки.
+- **Fail** — вместо ответа вернуть ошибку: Offline (-1009), Timed out (-1001), Host not found (-1003), Connection lost (-1005).
+- Если запрос упал без ответа, Continue пробрасывает ошибку, а заполненный статус превращает её в ответ.
+- Несколько ответов на паузе обрабатываются по очереди; когда очередь пуста, панель закрывается (если её открыл брейкпоинт). Запрос на паузе виден в списке как `PAUSED`, изменённый — с пометкой «Modified at breakpoint».
+- Таймаут приложения продолжает идти (по умолчанию 60 с): если он сработает, приложение получит ошибку таймаута, а редактор перейдёт к следующему ответу.
+- Правила включаются, выключаются, редактируются и удаляются в **Network → Breakpoints** (кнопка ⏸ в списке запросов).
+
+### Сценарии — Scenarios
+
+Плитки во вкладке **Scenarios**, например, чтобы входить в тестовые аккаунты без экрана логина:
+
+```swift
+#if DEBUG
+DebugViewSwift.addScenarioGroup("Accounts", current: { AuthService.shared.currentUser?.email }, scenarios: [
+    DebugScenario(id: "premium@test.com", title: "Premium", subtitle: "Email · subscription", systemImage: "crown") {
+        try await AuthService.shared.signIn(email: "premium@test.com", password: "…")
+        AppRouter.shared.showMain()
+    },
+    DebugScenario(id: "basic@test.com", title: "Basic", subtitle: "Email") {
+        try await AuthService.shared.signIn(email: "basic@test.com", password: "…")
+        AppRouter.shared.showMain()
+    },
+    DebugScenario(id: "guest", title: "Signed out", systemImage: "person.crop.circle.badge.xmark") {
+        AuthService.shared.signOut()
+    }
+])
+#endif
+```
+
+- `apply` — код приложения (`async throws`, вызывается на main). Пока он выполняется, у плитки спиннер, остальные плитки недоступны. Если `apply` выбросит ошибку, она покажется в панели; при успехе панель закроется.
+- Пока выполняется сценарий, key-окном снова становится окно приложения, так что код вида «заменить `rootViewController` у key window» работает как обычно.
+- `current` возвращает `id` активного сценария (его плитка отмечается галочкой). Он запрашивается при каждом открытии вкладки, поэтому источником правды остаётся приложение.
+- Группа с тем же названием заменяется. Групп может быть несколько (аккаунты, окружение, фича-флаги).
+- Запуск с аргументом `-DebugViewSwiftScenario <id>` применяет сценарий, как только зарегистрирована его группа: `xcrun simctl launch booted <bundle id> -DebugViewSwiftScenario premium@test.com`. Если сценарию нужен UI приложения, регистрируйте группу после его создания.
+- Sign in with Apple не автоматизировать (системный шит, настоящий Apple ID): для таких аккаунтов нужен debug-эндпоинт бэкенда, выдающий сессию тестового пользователя.
+- Держите регистрацию с паролями под `#if DEBUG`, чтобы они не попали в релизную сборку.
 
 ## Документация в Xcode
 
@@ -237,7 +294,13 @@ Xcode старше версии, которой собран бинарник. �
 **Какие-то запросы не видны во вкладке Network**
 Перехватываются запросы через `URLSession`. Не попадают: `WKWebView`, сокеты, сессии, у которых `protocolClasses` задаётся вручную после создания конфигурации, а также хосты из `ignoredHosts`.
 
-**Крашей нет в App → Crash reports**
+**Крашей нет в Tools → Crash reports**
 - Отчёт появляется после **следующего** запуска приложения.
 - Если приложение запущено из Xcode, краш останавливается в отладчике и отчёт может не записаться — проверяйте, запуская приложение с иконки.
 - Не включайте вместе с другим крэш-репортером (`enablesCrashReporting = false`).
+
+**Тестовый пуш не показывается, пока приложение открыто**
+Баннер в foreground решает `userNotificationCenter(_:willPresent:withCompletionHandler:)` вашего делегата — если он возвращает пустые опции, поставьте задержку 5–10 с и сверните приложение. Если уведомления запрещены, разрешите их в Настройках.
+
+**Подменённая геолокация не приходит**
+Подменяются `CLLocationManager` (делегат и `location`). `CLLocationUpdate.liveUpdates()` и `CLMonitor` (iOS 17+) не подменяются. Проверьте, что не выключен `enablesLocationSimulation`.
