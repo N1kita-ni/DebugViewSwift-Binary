@@ -2,7 +2,7 @@
 
 In-app инструменты отладки для iOS-приложений на UIKit: перехват сети, производительность, инспектор лейаута и 3D-иерархия вью, хранилища, консоль, краш-репорты, подмена геолокации и часового пояса, тестовые пуши.
 
-Это бинарная сборка (XCFramework). Текущая версия — **1.4.1**.
+Это бинарная сборка (XCFramework). Текущая версия — **1.5.0**.
 
 ## Содержание
 
@@ -81,14 +81,14 @@ In-app инструменты отладки для iOS-приложений н�
 
 1. **File → Add Package Dependencies…**
 2. Вставьте URL: `https://github.com/N1kita-ni/DebugViewSwift-Binary.git`
-3. **Dependency Rule:** *Up to Next Major Version* от `1.4.1`.
+3. **Dependency Rule:** *Up to Next Major Version* от `1.5.0`.
 4. Добавьте продукт **DebugViewSwift** в таргет приложения.
 
 ### Через Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.4.1")
+    .package(url: "https://github.com/N1kita-ni/DebugViewSwift-Binary.git", from: "1.5.0")
 ],
 targets: [
     .target(
