@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "DebugViewSwift",
     platforms: [
-        .iOS(.v14)
+        .iOS(.v16)
     ],
     products: [
         .library(name: "DebugViewSwift", targets: ["DebugViewSwift"])
@@ -13,8 +13,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "DebugViewSwift",
-            url: "https://github.com/N1kita-ni/DebugViewSwift-Binary/releases/download/1.3.0/DebugViewSwift.xcframework.zip",
-            checksum: "220a75b524e7dd9abad7961d746a2b4cd8a00d5d9d812b05eba267974abb0891"
+            url: "https://github.com/N1kita-ni/DebugViewSwift-Binary/releases/download/1.4.1/DebugViewSwift.xcframework.zip",
+            checksum: "edfc973b69aef017ce6a338974ab5c0ccfa27597364522121e75ed3e3fd49f6f"
         )
     ]
 )
